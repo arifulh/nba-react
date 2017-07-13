@@ -8,12 +8,12 @@ const MAXRANGES = [  82, 82, 48, 50, 50, 50, 100, 50, 50, 100, 50, 50, 100, 50, 
 class Data {
 
    constructor() {
-        this._raw = raw;
-        this._keys = raw.keys;
-        this._players = raw.values;
-        this._db = new Loki('nba-react.db');
-        this._data = this._db.addCollection('data');
-        this.insertAll();
+      this._raw = raw;
+      this._keys = raw.keys;
+      this._players = raw.values;
+      this._db = new Loki('nba-react.db');
+      this._data = this._db.addCollection('data');
+      this.insertAll();
     }
 
 	insertAll() {
