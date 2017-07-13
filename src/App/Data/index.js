@@ -21,8 +21,7 @@ class Data {
 	  this._players.forEach((p, i) => {
 	    let pdata = { };
 	    p.forEach((data, index) => {
-	      if (this._keys[index].match('%')) data = data*100;
-	      pdata[this._keys[index]] = data;
+	      pdata[this._keys[index]] = !isNaN(data) ? parseFloat(data).toFixed(1) : data;
 	    })
 	    bulk.push(pdata);
 	  })
