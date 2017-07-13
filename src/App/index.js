@@ -9,23 +9,24 @@ class App extends Component {
 
   constructor() {
     super()
-    this.state = { data:  Data.findAll() }; // temporary
-    this.handleFilterResults = this.handleFilterResults.bind(this);
+
+    this.state = { data:  Data.findAll().data }; // temporary
+    this.onFilterHandler = this.onFilterHandler.bind(this);
   }
 
-  handleFilterResults(res) {
+  onFilterHandler(res) {
     let data = Data.findAll();
-    this.setState({ data: });
+    this.setState({ data: data });
   }
 
   render() {
     return (
       <div id="container">
         <div className="leftPane">
-          <Filters onResults={this.handleFilterResults} />
+          <Filters onResults={this.onFilterHandler} />
         </div>
         <div className="rightPane">
-          <TableScroller data={this.state.data} />
+          <TableScroller rowHeight={50} visibleRows={10} data={this.state.data} />
         </div>
       </div>
     );
