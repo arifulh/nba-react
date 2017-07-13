@@ -28,6 +28,10 @@ class Data {
 	  })
 	  this._data.insert(bulk);
 	}
+
+	findAll() {
+		return this._data;
+	}
   	
 }
 
