@@ -7,27 +7,43 @@ class TableScroller extends Component {
     super();
     this.state = {
       currentTop: 0,
-      currentBot: 0,
-      isScrolling: false
+      currentBot: null
     }
+    this.scrolling = false;
+    this.scrollingTimer = null;
+    this.lastScroll = Date.now();
     this.onScrollingHandler = this.onScrollingHandler.bind(this);    
   }
 
   onScrollingHandler(e) {
-
-  }
+    if (this.scrolling ) return;
+    let top = Math.floor((this.refs.scroller.scrollTop/this.props.rowHeight));
+    let bot = top+this.props.visibleRows ;
+    if (bot < top+bot) 
+      this.setState({ currentTop: top, currentBot: top+bot },
+        function() {
+          this.scrolling = false
+        }.bind(this), 100)
+  } 
 
   render() {
-    const rows = this.props.data.map((p, i) => {
-      let cells = Object.keys(p).map((key)  => {
-        if (key !== 'meta' && key !== 'position' && key !== 'team') return (<div>{p[key]}</div>)
-      })
-      return (<div className="table-row"> { cells } </div>)
-    });
+    const top =  this.state.currentTop
+    const bot = this.state.currentBot || (top+this.props.visibleRows)
+
+    const rows = this.props.data.slice(top, bot).map((p, i) => {
+        let cells = Object.keys(p).filter((key) => {
+          return (key !== '$loki' && key !== 'age' && key !== 'meta') 
+        }).map((key)  => {
+          return (<td className={key.replace('%','') }>{ key === 'player' ? i+'.' : '' } {p[key]}</td>)
+        })
+        return (<tr key={i} >  { cells } </tr>)
+      });
 
     return (
-      <div className="TableScroller">
-        <div className="TableBody">{ rows }</div>
+      <div ref="scroller" className="TableScroller" onScroll={this.onScrollingHandler}>
+        <table margin={0} padding={0} border={0}>
+        <tbody>{ rows }</tbody>
+        </table>
       </div>
     );
   }

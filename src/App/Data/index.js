@@ -7,29 +7,33 @@ const MAXRANGES = [  82, 82, 48, 50, 50, 50, 100, 50, 50, 100, 50, 50, 100, 50, 
 
 class Data {
 
-   constructor() {
-      this._raw = raw;
-      this._keys = raw.keys;
-      this._players = raw.values;
-      this._db = new Loki('nba-react.db');
-      this._data = this._db.addCollection('data');
-      this.insertAll();
-    }
+  constructor() {
+    this._raw = raw;
+    this._keys = raw.keys;
+    this._players = raw.values;
+    this._db = new Loki('nba-react.db');
+    this._data = this._db.addCollection('data');
+    this.insertAll();
+  }
 
 	insertAll() {
 	  let bulk = [];
 	  this._players.forEach((p, i) => {
 	    let pdata = { };
 	    p.forEach((data, index) => {
-	      pdata[this._keys[index]] = !isNaN(data) ? parseFloat(data).toFixed(1) : data;
+		  if (this._keys[index].match(/\%/g)) data = data*100;  	
+		  if (!isNaN(data)) data = parseFloat(data).toFixed(2);
+	      pdata[this._keys[index]] = data;
 	    })
 	    bulk.push(pdata);
+
 	  })
+
 	  this._data.insert(bulk);
 	}
 
 	findAll() {
-		return this._data;
+		return this._data.data;
 	}
   	
 }
